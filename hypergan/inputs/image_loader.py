@@ -58,6 +58,8 @@ class ImageLoader:
             img = tf.image.decode_jpeg(value, channels=channels)
         elif format == 'png':
             img = tf.image.decode_png(value, channels=channels)
+        elif format == 'bin':
+            img = 255 * tf.reshape(tf.decode_raw(value, tf.uint8), (height, width, channels))
         else:
             print("[loader] Failed to load format", format)
         img = tf.cast(img, tf.float32)
