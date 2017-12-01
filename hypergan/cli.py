@@ -22,6 +22,7 @@ from hypergan.samplers.aligned_sampler import AlignedSampler
 from hypergan.samplers.autoencode_sampler import AutoencodeSampler
 from hypergan.samplers.random_walk_sampler import RandomWalkSampler
 from hypergan.samplers.alphagan_random_walk_sampler import AlphaganRandomWalkSampler
+from hypergan.samplers.rating_sampler import RatingSampler
 
 from hypergan.losses.supervised_loss import SupervisedLoss
 from hypergan.multi_component import MultiComponent
@@ -66,7 +67,8 @@ class CLI:
                 'grid': GridSampler,
                 'began': BeganSampler,
                 'autoencode': AutoencodeSampler,
-                'aligned': AlignedSampler
+                'aligned': AlignedSampler,
+                'rating': RatingSampler
         }
         if name in samplers:
             return samplers[name]
@@ -131,6 +133,14 @@ class CLI:
             print("Sample", self.samples)
             sleep(0.2)
 
+    def sample_for(self, steps):
+        for i in range(steps):
+            sample_file="samples/%06d.png" % (self.samples)
+            self.create_path(sample_file)
+            self.sample(sample_file)
+            self.samples += 1
+            print("Sample", self.samples)
+            sleep(0.2)
 
     def train(self):
         i=0
@@ -220,6 +230,6 @@ class CLI:
                 print("Model loaded")
 
             tf.train.start_queue_runners(sess=self.gan.session)
-            self.sample_forever()
+            self.sample_for(self.args.steps)
             tf.reset_default_graph()
             self.gan.session.close()
