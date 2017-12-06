@@ -60,7 +60,7 @@ class ResizeConvGenerator(BaseGenerator):
                 net = activation(net)
                 net = ops.conv2d(net, 3, 3, 1, 1, ops.shape(net)[3]//(config.extra_layers_reduction or 1))
         else:
-            net = ops.reshape(net, [ops.shape(net)[0], -1])
+            net = ops.reshape(net, [-1, np.prod(net.shape[1:])])
             primes = config.initial_dimensions or [4, 4]
             depths = self.depths(primes[0])
             initial_depth = depths[0]

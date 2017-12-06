@@ -1,6 +1,7 @@
 import hyperchamber as hc
 import inspect
 import itertools
+import tensorflow as tf
 
 
 class ValidationException(Exception):
@@ -95,17 +96,7 @@ class GANComponent:
         
         This splits the results.  Returns [d_real, d_fake]
         """
-        ops = self.ops or self.gan.ops
-        s = ops.shape(net)
-        bs = s[0]
-        nets = []
-        net = ops.reshape(net, [bs, -1])
-        start = [0 for x in ops.shape(net)]
-        for i in range(count):
-            size = [bs//count] + [x for x in ops.shape(net)[1:]]
-            nets.append(ops.slice(net, start, size))
-            start[0] += bs//count
-        return nets
+        return tf.split(net, count)
 
     def reuse(self, net):
         self.ops.reuse()

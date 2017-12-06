@@ -1,3 +1,4 @@
+import numpy as np
 import tensorflow as tf
 import hyperchamber as hc
 import inspect
@@ -71,7 +72,7 @@ class PyramidDiscriminator(BaseDiscriminator):
         for i in range(config.fc_layers or 0):
             net = self.layer_regularizer(net)
             net = activation(net)
-            net = ops.reshape(net, [ops.shape(net)[0], -1])
+            net = ops.reshape(net, (-1, np.prod(net.shape.as_list()[1:])))
             net = ops.linear(net, config.fc_layer_size or 300)
             net = self.layer_regularizer(net)
 
