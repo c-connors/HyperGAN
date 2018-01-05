@@ -1,4 +1,5 @@
 from hypergan.gan_component import GANComponent
+import tensorflow as tf
 
 class BaseGenerator(GANComponent):
     def create(self, sample=None):
@@ -6,7 +7,10 @@ class BaseGenerator(GANComponent):
         ops = self.ops
         if sample is None:
             sample = gan.encoder.sample
-        return self.build(sample)
+        gen_sample = self.build(sample)
+        gen_sample = tf.placeholder_with_default(gen_sample, gen_sample.shape, name='gan_generator_sample')
+        self.sample = gen_sample
+        return gen_sample
 
     def layer_filter(self, net):
         ops = self.ops
